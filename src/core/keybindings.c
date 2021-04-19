@@ -3680,6 +3680,79 @@ handle_restore_shortcuts (MetaDisplay     *display,
   meta_window_force_restore_shortcuts (display->focus_window, source);
 }
 
+static void spawn (int n_args, ...)
+{
+  va_list args;
+  gchar *cmd[16];
+  int i;
+
+  va_start (args, n_args);
+  for (i = 0; i < n_args; i++)
+  {
+    cmd[i] = g_strdup (va_arg (args, char *));
+  }
+  va_end (args);
+  cmd[i] = NULL;
+
+  g_spawn_async (NULL, cmd, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL);
+  for (i = 0; i < n_args; i++) g_free (cmd[i]);
+}
+
+static void handle_launch_terminal (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
+{
+    spawn (1, "x-terminal-emulator");
+}
+
+static void handle_lxpanel_menu (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
+{
+    spawn (2, "lxpanelctl", "menu");
+}
+
+static void handle_lxpanel_run (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
+{
+    spawn (2, "lxpanelctl", "run");
+}
+
+static void handle_shutdown (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
+{
+    spawn (1, "lxde-pi-shutdown-helper");
+}
+
+static void handle_volume_up (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
+{
+    spawn (4, "lxpanelctl", "command", "volumepulse", "volu");
+}
+
+static void handle_volume_down (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
+{
+    spawn (4, "lxpanelctl", "command", "volumepulse", "vold");
+}
+
+static void handle_volume_mute (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
+{
+    spawn (4, "lxpanelctl", "command", "volumepulse", "mute");
+}
+
+static void handle_launch_taskman (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
+{
+    spawn (1, "lxtask");
+}
+
+static void handle_screenshot (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
+{
+    spawn (1, "scrot");
+}
+
+static void handle_toggle_magnifier (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
+{
+    spawn (4, "lxpanelctl", "command", "magnifier", "toggle");
+}
+
+static void handle_install_reader (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
+{
+    spawn (7, "env", "SUDO_ASKPASS=/usr/lib/gui-pkinst/pwdgpi.sh", "sudo", "-AE", "gui-pkinst", "orca", "reboot");
+}
+
 /**
  * meta_keybindings_set_custom_handler:
  * @name: The name of the keybinding to set
@@ -4091,6 +4164,83 @@ init_builtin_key_bindings (MetaDisplay *display)
                           META_KEY_BINDING_NON_MASKABLE,
                           META_KEYBINDING_ACTION_NONE,
                           handle_restore_shortcuts, 0);
+
+  add_builtin_keybinding (display,
+                          "launch-terminal",
+                          mutter_keybindings,
+                          META_KEY_BINDING_NON_MASKABLE,
+                          META_KEYBINDING_ACTION_NONE,
+                          handle_launch_terminal, 0);
+
+  add_builtin_keybinding (display,
+                          "lxpanel-menu",
+                          mutter_keybindings,
+                          META_KEY_BINDING_NON_MASKABLE,
+                          META_KEYBINDING_ACTION_NONE,
+                          handle_lxpanel_menu, 0);
+
+  add_builtin_keybinding (display,
+                          "lxpanel-run",
+                          mutter_keybindings,
+                          META_KEY_BINDING_NON_MASKABLE,
+                          META_KEYBINDING_ACTION_NONE,
+                          handle_lxpanel_run, 0);
+
+  add_builtin_keybinding (display,
+                          "shutdown",
+                          mutter_keybindings,
+                          META_KEY_BINDING_NON_MASKABLE,
+                          META_KEYBINDING_ACTION_NONE,
+                          handle_shutdown, 0);
+
+   add_builtin_keybinding (display,
+                          "launch-taskman",
+                          mutter_keybindings,
+                          META_KEY_BINDING_NON_MASKABLE,
+                          META_KEYBINDING_ACTION_NONE,
+                          handle_launch_taskman, 0);
+
+   add_builtin_keybinding (display,
+                          "volume-up",
+                          mutter_keybindings,
+                          META_KEY_BINDING_NON_MASKABLE,
+                          META_KEYBINDING_ACTION_NONE,
+                          handle_volume_up, 0);
+
+   add_builtin_keybinding (display,
+                          "volume-down",
+                          mutter_keybindings,
+                          META_KEY_BINDING_NON_MASKABLE,
+                          META_KEYBINDING_ACTION_NONE,
+                          handle_volume_down, 0);
+
+   add_builtin_keybinding (display,
+                          "volume-mute",
+                          mutter_keybindings,
+                          META_KEY_BINDING_NON_MASKABLE,
+                          META_KEYBINDING_ACTION_NONE,
+                          handle_volume_mute, 0);
+
+   add_builtin_keybinding (display,
+                          "screenshot",
+                          mutter_keybindings,
+                          META_KEY_BINDING_NON_MASKABLE,
+                          META_KEYBINDING_ACTION_NONE,
+                          handle_screenshot, 0);
+
+   add_builtin_keybinding (display,
+                          "toggle-magnifier",
+                          mutter_keybindings,
+                          META_KEY_BINDING_NON_MASKABLE,
+                          META_KEYBINDING_ACTION_NONE,
+                          handle_toggle_magnifier, 0);
+
+   add_builtin_keybinding (display,
+                          "install-reader",
+                          mutter_keybindings,
+                          META_KEY_BINDING_NON_MASKABLE,
+                          META_KEYBINDING_ACTION_NONE,
+                          handle_install_reader, 0);
 
   /************************ PER WINDOW BINDINGS ************************/
 

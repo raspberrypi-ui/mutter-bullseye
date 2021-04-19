@@ -3,7 +3,7 @@
           gettext-domain="@GETTEXT_DOMAIN@">
 
     <key name="overlay-key" type="s">
-      <default>'Super_L'</default>
+      <default>''</default>
       <summary>Modifier to use for extended window management operations</summary>
       <description>
         This key will initiate the “overlay”, which is a combination window
@@ -153,11 +153,11 @@
   <schema id="org.gnome.mutter.keybindings" path="/org/gnome/mutter/keybindings/">
 
     <key name="toggle-tiled-left" type="as">
-      <default><![CDATA[['<Super>Left']]]></default>
+      <default><![CDATA[['<Ctrl><Alt>Left']]]></default>
     </key>
 
     <key name="toggle-tiled-right" type="as">
-      <default><![CDATA[['<Super>Right']]]></default>
+      <default><![CDATA[['<Ctrl><Alt>Right']]]></default>
     </key>
 
     <key name="tab-popup-select" type="as">
@@ -171,7 +171,7 @@
     </key>
 
     <key name="switch-monitor" type="as">
-      <default><![CDATA[['<Super>p','XF86Display']]]></default>
+      <default><![CDATA[['XF86Display']]]></default>
       <summary>Switch monitor configurations</summary>
     </key>
 
@@ -180,5 +180,59 @@
       <summary>Rotates the built-in monitor configuration</summary>
     </key>
 
+    <key name="launch-terminal" type="as">
+      <default><![CDATA[['<Ctrl><Alt>t']]]></default>
+      <summary>Open terminal window</summary>
+    </key>
+
+    <key name="lxpanel-menu" type="as">
+      <default><![CDATA[['Super_L']]]></default>
+      <summary>Open LXPanel menu</summary>
+    </key>
+
+    <key name="lxpanel-run" type="as">
+      <default><![CDATA[['<Alt>F2']]]></default>
+      <summary>Open LXPanel run dialog</summary>
+    </key>
+
+    <key name="shutdown" type="as">
+      <default><![CDATA[['<Ctrl><Alt>Delete','<Ctrl><Alt>End']]]></default>
+      <summary>Open shutdown dialog</summary>
+    </key>
+
+    <key name="launch-taskman" type="as">
+      <default><![CDATA[['<Ctrl><Shift>Escape']]]></default>
+      <summary>Open task manager</summary>
+    </key>
+
+    <key name="volume-up" type="as">
+      <default><![CDATA[['XF86AudioRaiseVolume']]]></default>
+      <summary>Increase volume</summary>
+    </key>
+
+    <key name="volume-down" type="as">
+      <default><![CDATA[['XF86AudioLowerVolume']]]></default>
+      <summary>Decrease volume</summary>
+    </key>
+
+    <key name="volume-mute" type="as">
+      <default><![CDATA[['XF86AudioMute']]]></default>
+      <summary>Toggle mute</summary>
+    </key>
+
+    <key name="screenshot" type="as">
+      <default><![CDATA[['Print']]]></default>
+      <summary>Take screenshot</summary>
+    </key>
+
+    <key name="toggle-magnifier" type="as">
+      <default><![CDATA[['<Ctrl><Alt>m']]]></default>
+      <summary>Toggle screen magnifier</summary>
+    </key>
+
+    <key name="install-reader" type="as">
+      <default><![CDATA[['<Ctrl><Alt>Space']]]></default>
+      <summary>Install screen reader</summary>
+    </key>
   </schema>
 </schemalist>

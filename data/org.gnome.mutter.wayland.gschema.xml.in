@@ -56,7 +56,7 @@
       <summary>Switch to VT 12</summary>
     </key>
     <key name="restore-shortcuts" type="as">
-      <default><![CDATA[['<Super>Escape']]]></default>
+      <default>[]</default>
       <summary>Re-enable shortcuts</summary>
     </key>
   </schema>
