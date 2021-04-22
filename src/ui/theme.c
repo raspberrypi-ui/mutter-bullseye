@@ -839,16 +839,32 @@ meta_frame_layout_draw_with_style (MetaFrameLayout         *layout,
           switch (button_type)
             {
             case META_BUTTON_TYPE_CLOSE:
-               icon_name = "window-close-symbolic";
+               if (button_states[button_type] == META_BUTTON_STATE_PRELIGHT)
+                  icon_name = "window-close-hover-symbolic";
+               else
+                  icon_name = "window-close-symbolic";
                break;
             case META_BUTTON_TYPE_MAXIMIZE:
                if (flags & META_FRAME_MAXIMIZED)
-                 icon_name = "window-restore-symbolic";
+               {
+                  if (button_states[button_type] == META_BUTTON_STATE_PRELIGHT)
+                     icon_name = "window-restore-hover-symbolic";
+                  else
+                     icon_name = "window-restore-symbolic";
+               }
                else
-                 icon_name = "window-maximize-symbolic";
+               {
+                  if (button_states[button_type] == META_BUTTON_STATE_PRELIGHT)
+                     icon_name = "window-maximize-hover-symbolic";
+                  else
+                    icon_name = "window-maximize-symbolic";
+               }
                break;
             case META_BUTTON_TYPE_MINIMIZE:
-               icon_name = "window-minimize-symbolic";
+               if (button_states[button_type] == META_BUTTON_STATE_PRELIGHT)
+                  icon_name = "window-minimize-hover-symbolic";
+               else
+                  icon_name = "window-minimize-symbolic";
                break;
             case META_BUTTON_TYPE_MENU:
                icon_name = "open-menu-symbolic";
