@@ -3680,77 +3680,80 @@ handle_restore_shortcuts (MetaDisplay     *display,
   meta_window_force_restore_shortcuts (display->focus_window, source);
 }
 
-static void spawn (int n_args, ...)
+static void spawn (char *arg1, ...)
 {
   va_list args;
-  gchar *cmd[16];
-  int i;
+  char *cmd[16], *arg;
+  int i = 0;
 
-  va_start (args, n_args);
-  for (i = 0; i < n_args; i++)
+  va_start (args, arg1);
+  arg = arg1;
+  while (arg != NULL)
   {
-    cmd[i] = g_strdup (va_arg (args, char *));
+    cmd[i++] = g_strdup (arg);
+    arg = va_arg (args, char *);
   }
   va_end (args);
   cmd[i] = NULL;
 
   g_spawn_async (NULL, cmd, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL);
-  for (i = 0; i < n_args; i++) g_free (cmd[i]);
+
+  while (--i) g_free (cmd[i]);
 }
 
 static void handle_launch_terminal (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    spawn (1, "x-terminal-emulator");
+    spawn ("x-terminal-emulator");
 }
 
 static void handle_lxpanel_menu (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    spawn (2, "lxpanelctl", "menu");
+    spawn ("lxpanelctl", "menu");
 }
 
 static void handle_lxpanel_run (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    spawn (2, "lxpanelctl", "run");
+    spawn ("lxpanelctl", "run");
 }
 
 static void handle_shutdown (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    spawn (1, "lxde-pi-shutdown-helper");
+    spawn ("lxde-pi-shutdown-helper");
 }
 
 static void handle_volume_up (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    spawn (4, "lxpanelctl", "command", "volumepulse", "volu");
+    spawn ("lxpanelctl", "command", "volumepulse", "volu");
 }
 
 static void handle_volume_down (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    spawn (4, "lxpanelctl", "command", "volumepulse", "vold");
+    spawn ("lxpanelctl", "command", "volumepulse", "vold");
 }
 
 static void handle_volume_mute (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    spawn (4, "lxpanelctl", "command", "volumepulse", "mute");
+    spawn ("lxpanelctl", "command", "volumepulse", "mute");
 }
 
 static void handle_launch_taskman (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    spawn (1, "lxtask");
+    spawn ("lxtask");
 }
 
 static void handle_screenshot (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    spawn (1, "scrot");
+    spawn ("scrot");
 }
 
 static void handle_toggle_magnifier (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    spawn (4, "lxpanelctl", "command", "magnifier", "toggle");
+    spawn ("lxpanelctl", "command", "magnifier", "toggle");
 }
 
 static void handle_install_reader (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    spawn (7, "env", "SUDO_ASKPASS=/usr/lib/gui-pkinst/pwdgpi.sh", "sudo", "-AE", "gui-pkinst", "orca", "reboot");
+    spawn ("env", "SUDO_ASKPASS=/usr/lib/gui-pkinst/pwdgpi.sh", "sudo", "-AE", "gui-pkinst", "orca", "reboot");
 }
 
 /**
