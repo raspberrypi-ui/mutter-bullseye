@@ -3680,10 +3680,11 @@ handle_restore_shortcuts (MetaDisplay     *display,
   meta_window_force_restore_shortcuts (display->focus_window, source);
 }
 
-static void spawn (char *arg1, ...)
+static void spawn (const char *arg1, ...)
 {
   va_list args;
-  char *cmd[16], *arg;
+  const char *arg;
+  char *cmd[16];
   int i = 0;
 
   va_start (args, arg1);
@@ -3696,7 +3697,13 @@ static void spawn (char *arg1, ...)
   va_end (args);
   cmd[i] = NULL;
 
+#ifdef USE_XWAYLAND
+  gchar **environ = g_environ_setenv (g_get_environ (), "GDK_BACKEND", "x11", TRUE);
+  g_spawn_async (NULL, cmd, environ, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL);
+  g_strfreev (environ);
+#else
   g_spawn_async (NULL, cmd, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL);
+#endif
 
   while (--i) g_free (cmd[i]);
 }
