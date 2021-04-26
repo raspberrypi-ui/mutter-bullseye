@@ -3760,7 +3760,14 @@ static void handle_toggle_magnifier (MetaDisplay *display, MetaWindow *window, C
 
 static void handle_install_reader (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    spawn ("env", "SUDO_ASKPASS=/usr/lib/gui-pkinst/pwdgpi.sh", "sudo", "-AE", "gui-pkinst", "orca", "reboot");
+    char *cmd[5] = {"sudo", "gui-pkinst", "orca", "reboot", NULL};
+
+    gchar **environ = g_environ_setenv (g_get_environ (), "SUDO_ASKPASS", "/usr/lib/gui-pkinst/pwdgpi.sh", TRUE);
+#ifdef USE_XWAYLAND
+    environ = g_environ_setenv (environ, "GDK_BACKEND", "x11", TRUE);
+#endif
+    g_spawn_async (NULL, cmd, environ, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL);
+    g_strfreev (environ);
 }
 
 /**
