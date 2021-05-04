@@ -365,6 +365,9 @@ meta_frame_layout_calc_geometry (MetaFrameLayout        *layout,
   int min_size_for_rounding;
   int scale = meta_theme_get_window_scaling_factor ();
 
+  /* adjust icon size for larger titlebars */
+  if (text_height >= 22) layout->icon_size = 24;
+
   /* the left/right rects in order; the max # of rects
    * is the number of button functions
    */
