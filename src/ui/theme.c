@@ -367,6 +367,7 @@ meta_frame_layout_calc_geometry (MetaFrameLayout        *layout,
 
   /* adjust icon size for larger titlebars */
   if (text_height >= 22) layout->icon_size = 24;
+  else layout->icon_size = META_MINI_ICON_WIDTH;
 
   /* the left/right rects in order; the max # of rects
    * is the number of button functions
