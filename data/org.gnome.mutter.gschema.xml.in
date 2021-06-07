@@ -147,6 +147,16 @@
       </description>
     </key>
 
+    <key name="disable-override-redirect" type="b">
+      <default>false</default>
+      <summary>Disable use of top set of windows</summary>
+      <description>
+        When true, instead of having a separate top set of windows
+        used for those with override-redirect set, all windows are
+        in the standard set.
+      </description>
+    </key>
+
     <child name="keybindings" schema="org.gnome.mutter.keybindings"/>
 
   </schema>

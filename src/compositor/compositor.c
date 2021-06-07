@@ -612,10 +612,14 @@ meta_compositor_add_window (MetaCompositor    *compositor,
                                "show-on-set-parent", FALSE,
                                NULL);
 
+  if (meta_prefs_get_disable_override_redirect ()) window_group = priv->window_group;
+  else
+  {
   if (window->layer == META_LAYER_OVERRIDE_REDIRECT)
     window_group = priv->top_window_group;
   else
     window_group = priv->window_group;
+  }
 
   clutter_actor_add_child (window_group, CLUTTER_ACTOR (window_actor));
 

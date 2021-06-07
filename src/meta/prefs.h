@@ -106,6 +106,7 @@ typedef enum
   META_PREF_DRAG_THRESHOLD,
   META_PREF_LOCATE_POINTER,
   META_PREF_CHECK_ALIVE_TIMEOUT,
+  META_PREF_DISABLE_OVERRIDE_REDIRECT,
 } MetaPreference;
 
 typedef void (* MetaPrefsChangedFunc) (MetaPreference pref,
@@ -191,6 +192,9 @@ void                        meta_prefs_set_show_fallback_app_menu (gboolean whet
 
 META_EXPORT
 void                        meta_prefs_get_button_layout (MetaButtonLayout *button_layout);
+
+META_EXPORT
+gboolean                    meta_prefs_get_disable_override_redirect (void);
 
 /* Double, right, middle click can be configured to any titlebar meta-action */
 META_EXPORT
