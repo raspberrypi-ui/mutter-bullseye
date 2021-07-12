@@ -1026,6 +1026,7 @@ meta_frame_left_click_event (MetaUIFrame        *frame,
 {
   MetaX11Display *x11_display = frame->frames->x11_display;
   MetaFrameControl control;
+  MetaFrameFlags flags = meta_frame_get_flags (frame->meta_window->frame);
   guint32 evtime;
   gfloat x, y;
 
@@ -1040,6 +1041,11 @@ meta_frame_left_click_event (MetaUIFrame        *frame,
     case META_FRAME_CONTROL_MINIMIZE:
     case META_FRAME_CONTROL_DELETE:
     case META_FRAME_CONTROL_MENU:
+      if (control == META_FRAME_CONTROL_MAXIMIZE && ! (flags & META_FRAME_ALLOWS_MAXIMIZE)) return TRUE;
+      if (control == META_FRAME_CONTROL_UNMAXIMIZE && ! (flags & META_FRAME_ALLOWS_MAXIMIZE)) return TRUE;
+      if (control == META_FRAME_CONTROL_MINIMIZE && ! (flags & META_FRAME_ALLOWS_MINIMIZE)) return TRUE;
+      if (control == META_FRAME_CONTROL_DELETE && ! (flags & META_FRAME_ALLOWS_DELETE)) return TRUE;
+
       frame->grab_button = get_button_number (event);
       frame->button_state = META_BUTTON_STATE_PRESSED;
       frame->prelit_control = control;

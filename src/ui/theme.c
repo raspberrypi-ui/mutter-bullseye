@@ -167,20 +167,11 @@ rect_for_function (MetaFrameGeometry *fgeom,
       else
         return NULL;
     case META_BUTTON_FUNCTION_MINIMIZE:
-      if (flags & META_FRAME_ALLOWS_MINIMIZE)
         return &fgeom->min_rect;
-      else
-        return NULL;
     case META_BUTTON_FUNCTION_MAXIMIZE:
-      if (flags & META_FRAME_ALLOWS_MAXIMIZE)
         return &fgeom->max_rect;
-      else
-        return NULL;
     case META_BUTTON_FUNCTION_CLOSE:
-      if (flags & META_FRAME_ALLOWS_DELETE)
         return &fgeom->close_rect;
-      else
-        return NULL;
 
     case META_BUTTON_FUNCTION_LAST:
       return NULL;
@@ -819,7 +810,14 @@ meta_frame_layout_draw_with_style (MetaFrameLayout         *layout,
       button_rect.width /= scale;
       button_rect.height /= scale;
 
-      if (button_states[button_type] == META_BUTTON_STATE_PRELIGHT)
+      if ((button_type == META_BUTTON_TYPE_MAXIMIZE && ! (flags & META_FRAME_ALLOWS_MAXIMIZE))
+        || (button_type == META_BUTTON_TYPE_MINIMIZE && ! (flags & META_FRAME_ALLOWS_MINIMIZE))
+        || (button_type == META_BUTTON_TYPE_CLOSE && ! (flags & META_FRAME_ALLOWS_DELETE)))
+        button_states[button_type] = META_BUTTON_STATE_INSENSITIVE;
+
+      if (button_states[button_type] == META_BUTTON_STATE_INSENSITIVE)
+        gtk_style_context_set_state (style, state | GTK_STATE_INSENSITIVE);
+      else if (button_states[button_type] == META_BUTTON_STATE_PRELIGHT)
         gtk_style_context_set_state (style, state | GTK_STATE_PRELIGHT);
       else if (button_states[button_type] == META_BUTTON_STATE_PRESSED)
         gtk_style_context_set_state (style, state | GTK_STATE_ACTIVE);
@@ -843,7 +841,9 @@ meta_frame_layout_draw_with_style (MetaFrameLayout         *layout,
           switch (button_type)
             {
             case META_BUTTON_TYPE_CLOSE:
-               if (button_states[button_type] == META_BUTTON_STATE_PRELIGHT)
+               if (button_states[button_type] == META_BUTTON_STATE_INSENSITIVE)
+                  icon_name = "window-close-insens-symbolic";
+               else if (button_states[button_type] == META_BUTTON_STATE_PRELIGHT)
                   icon_name = "window-close-hover-symbolic";
                else
                   icon_name = "window-close-symbolic";
@@ -851,21 +851,27 @@ meta_frame_layout_draw_with_style (MetaFrameLayout         *layout,
             case META_BUTTON_TYPE_MAXIMIZE:
                if (flags & META_FRAME_MAXIMIZED)
                {
-                  if (button_states[button_type] == META_BUTTON_STATE_PRELIGHT)
+                  if (button_states[button_type] == META_BUTTON_STATE_INSENSITIVE)
+                     icon_name = "window-restore-insens-symbolic";
+                  else if (button_states[button_type] == META_BUTTON_STATE_PRELIGHT)
                      icon_name = "window-restore-hover-symbolic";
                   else
                      icon_name = "window-restore-symbolic";
                }
                else
                {
-                  if (button_states[button_type] == META_BUTTON_STATE_PRELIGHT)
+                  if (button_states[button_type] == META_BUTTON_STATE_INSENSITIVE)
+                     icon_name = "window-maximize-insens-symbolic";
+                  else if (button_states[button_type] == META_BUTTON_STATE_PRELIGHT)
                      icon_name = "window-maximize-hover-symbolic";
                   else
                     icon_name = "window-maximize-symbolic";
                }
                break;
             case META_BUTTON_TYPE_MINIMIZE:
-               if (button_states[button_type] == META_BUTTON_STATE_PRELIGHT)
+               if (button_states[button_type] == META_BUTTON_STATE_INSENSITIVE)
+                  icon_name = "window-minimize-insens-symbolic";
+               else if (button_states[button_type] == META_BUTTON_STATE_PRELIGHT)
                   icon_name = "window-minimize-hover-symbolic";
                else
                   icon_name = "window-minimize-symbolic";
