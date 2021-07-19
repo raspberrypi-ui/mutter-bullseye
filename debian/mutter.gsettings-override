@@ -3,7 +3,7 @@ auto-raise=true
 button-layout='appmenu:minimize,maximize,close'
 
 [org.gnome.desktop.wm.keybindings]
-lower=['<Alt>Escape']
+lower=['<Ctrl>Escape']
 maximize=['<Ctrl><Alt>Up']
 minimize=[]
 move-to-monitor-down=[]
