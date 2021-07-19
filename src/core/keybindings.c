@@ -3719,6 +3719,11 @@ static void handle_lxpanel_run (MetaDisplay *display, MetaWindow *window, Clutte
     spawn ("lxpanelctl", "run");
 }
 
+static void handle_lxpanel_move (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
+{
+    spawn ("lxpanelctl", "move");
+}
+
 static void handle_shutdown (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
     spawn ("lxde-pi-shutdown-helper");
@@ -3756,12 +3761,10 @@ static void handle_toggle_magnifier (MetaDisplay *display, MetaWindow *window, C
 
 static void handle_install_reader (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    char *cmd[5] = {"sudo", "gui-pkinst", "orca", "reboot", NULL};
+    const char *cmd[5] = {"sudo", "gui-pkinst", "orca", "reboot", NULL};
 
     gchar **environ = g_environ_setenv (g_get_environ (), "SUDO_ASKPASS", "/usr/lib/gui-pkinst/pwdgpi.sh", TRUE);
-#ifdef USE_XWAYLAND
     environ = g_environ_setenv (environ, "GDK_BACKEND", "x11", TRUE);
-#endif
     g_spawn_async (NULL, cmd, environ, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL);
     g_strfreev (environ);
 }
@@ -4198,6 +4201,13 @@ init_builtin_key_bindings (MetaDisplay *display)
                           META_KEY_BINDING_NON_MASKABLE,
                           META_KEYBINDING_ACTION_NONE,
                           handle_lxpanel_run, 0);
+
+   add_builtin_keybinding (display,
+                          "lxpanel-move",
+                          mutter_keybindings,
+                          META_KEY_BINDING_NON_MASKABLE,
+                          META_KEYBINDING_ACTION_NONE,
+                          handle_lxpanel_move, 0);
 
   add_builtin_keybinding (display,
                           "shutdown",

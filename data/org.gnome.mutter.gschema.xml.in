@@ -205,6 +205,11 @@
       <summary>Open LXPanel run dialog</summary>
     </key>
 
+    <key name="lxpanel-move" type="as">
+      <default><![CDATA[['<Ctrl><Alt>s']]]></default>
+      <summary>Move LXPanel between monitors</summary>
+    </key>
+
     <key name="shutdown" type="as">
       <default><![CDATA[['<Ctrl><Alt>Delete','<Ctrl><Alt>End']]]></default>
       <summary>Open shutdown dialog</summary>
