@@ -1089,15 +1089,7 @@ meta_theme_create_style_info (GdkScreen   *screen,
                               const gchar *variant)
 {
   MetaStyleInfo *style_info;
-  GtkCssProvider *provider;
-  char *theme_name;
-
-  g_object_get (gtk_settings_get_for_screen (screen),
-                "gtk-theme-name", &theme_name,
-                NULL);
-
-  provider = get_css_provider_for_theme_name (theme_name, variant);
-  g_free (theme_name);
+  GtkCssProvider *provider = gtk_css_provider_new ();
 
   style_info = g_new0 (MetaStyleInfo, 1);
   style_info->refcount = 1;
