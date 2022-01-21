@@ -47,6 +47,9 @@
 #include "cogl-poll-private.h"
 #include "winsys/cogl-winsys-egl-x11-private.h"
 #include "winsys/cogl-winsys-egl-private.h"
+#if __arm__ || __aarch64__
+#include "driver/gl/cogl-pipeline-opengl-private.h"
+#endif
 
 #define COGL_ONSCREEN_X11_EVENT_MASK (StructureNotifyMask | ExposureMask)
 
@@ -801,6 +804,18 @@ _cogl_winsys_texture_pixmap_x11_update (CoglTexturePixmapX11 *tex_pixmap,
 static void
 _cogl_winsys_texture_pixmap_x11_damage_notify (CoglTexturePixmapX11 *tex_pixmap)
 {
+#if __arm__ || __aarch64__
+  CoglTexture *tex = COGL_TEXTURE (tex_pixmap);
+  unsigned int gl_handle, gl_target;
+
+  if (!cogl_texture_get_gl_texture (tex, &gl_handle, &gl_target))
+    return;
+
+  _cogl_bind_gl_texture_transient (gl_target,
+                                   gl_handle);
+
+  tex->context->glTexParameteri (gl_target, GL_SYNC_STATUS, 1);
+#endif
 }
 
 static CoglTexture *

@@ -290,6 +290,10 @@ allocate_from_egl_image (CoglTexture2D *tex_2d,
       return FALSE;
     }
 
+#if __arm__ || __aarch64__
+  GE (ctx, glTexParameteri(GL_TEXTURE_2D, GL_SYNC_CONDITION, 1));
+#endif
+
   tex_2d->internal_format = internal_format;
   tex_2d->is_get_data_supported =
     !(loader->src.egl_image.flags & COGL_EGL_IMAGE_FLAG_NO_GET_DATA);

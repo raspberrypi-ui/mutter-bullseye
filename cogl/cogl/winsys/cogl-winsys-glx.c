@@ -2448,6 +2448,15 @@ _cogl_winsys_texture_pixmap_x11_update (CoglTexturePixmapX11 *tex_pixmap,
                                      buffer,
                                      NULL);
 
+#if __arm__ || __aarch64__
+      /* Unlike the EGL version, the GLX version rebinds the texture
+       * so we’ll set GL_SYNC_CONDITION to disable updating the shadow
+       * texture every time in case binding creates a new
+       * pipe_resource. */
+      ctx->glTexParameteri (gl_target, GL_SYNC_CONDITION, 1);
+      ctx->glTexParameteri (gl_target, GL_SYNC_STATUS, 1);
+#endif
+
       /* According to the recommended usage in the spec for
        * GLX_EXT_texture_pixmap we should release the texture after
        * we've finished drawing with it and it is undefined what
