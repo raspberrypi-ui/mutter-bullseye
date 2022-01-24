@@ -3254,6 +3254,45 @@ handle_switch (MetaDisplay     *display,
   do_choose_window (display, event_window, event, binding, backwards);
 }
 
+
+static void
+do_cycle_windows (MetaDisplay     *display,
+                  MetaWindow      *event_window,
+                  ClutterKeyEvent *event,
+                  MetaKeyBinding  *binding,
+                  gboolean         backward)
+{
+  MetaWorkspaceManager *workspace_manager = display->workspace_manager;
+  MetaWindow *window;
+
+  GList *stk = meta_stack_list_windows (display->stack, workspace_manager->active_workspace);
+  meta_stack_freeze (display->stack);
+
+  GList *first = stk;
+  while (!META_WINDOW_IN_NORMAL_TAB_CHAIN ((MetaWindow *) first->data)) first = first->next;
+
+  GList *last = g_list_last (stk);
+  while (!META_WINDOW_IN_NORMAL_TAB_CHAIN ((MetaWindow *) last->data)) last = last->prev;
+
+  if (backward)
+  {
+    stk = g_list_insert_before (stk, first, last->data);
+    window = (last->prev)->data;
+    stk = g_list_remove_link (stk, last);
+  }
+  else
+  {
+    stk = g_list_insert_before (stk, last->next, first->data);
+    window = first->data;
+    stk = g_list_remove_link (stk, first);
+  }
+
+  meta_stack_set_positions (display->stack, stk);
+  meta_stack_thaw (display->stack);
+
+  meta_window_focus (window, event->time);
+}
+
 static void
 handle_cycle (MetaDisplay     *display,
               MetaWindow      *event_window,
@@ -3262,7 +3301,7 @@ handle_cycle (MetaDisplay     *display,
               gpointer         dummy)
 {
   gboolean backwards = meta_key_binding_is_reversed (binding);
-  do_choose_window (display, event_window, event, binding, backwards);
+  do_cycle_windows (display, event_window, event, binding, backwards);
 }
 
 static void
