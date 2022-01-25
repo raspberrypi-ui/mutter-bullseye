@@ -3266,6 +3266,9 @@ do_cycle_windows (MetaDisplay     *display,
   MetaTabList type = binding->handler->data;
   MetaWindow *window;
 
+  // if a keep-above window has focus, trying to switch group will infinite-loop, so don't try...
+  if (display->focus_window->wm_state_above && type != META_TAB_LIST_NORMAL) return;
+
   GList *stk = meta_stack_list_windows (display->stack, workspace_manager->active_workspace);
   meta_stack_freeze (display->stack);
 
