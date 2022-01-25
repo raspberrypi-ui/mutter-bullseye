@@ -3263,29 +3263,38 @@ do_cycle_windows (MetaDisplay     *display,
                   gboolean         backward)
 {
   MetaWorkspaceManager *workspace_manager = display->workspace_manager;
+  MetaTabList type = binding->handler->data;
   MetaWindow *window;
 
   GList *stk = meta_stack_list_windows (display->stack, workspace_manager->active_workspace);
   meta_stack_freeze (display->stack);
 
-  GList *first = stk;
-  while (!META_WINDOW_IN_NORMAL_TAB_CHAIN ((MetaWindow *) first->data)) first = first->next;
-
-  GList *last = g_list_last (stk);
-  while (!META_WINDOW_IN_NORMAL_TAB_CHAIN ((MetaWindow *) last->data)) last = last->prev;
-
-  if (backward)
+  // the loop body shuffles one window either up or down in the stack
+  // for normal operation, break after one iteration to just move by one window
+  // for group operation, repeat the shuffle to find another window in the same group
+  do
   {
-    stk = g_list_insert_before (stk, first, last->data);
-    window = (last->prev)->data;
-    stk = g_list_remove_link (stk, last);
-  }
-  else
-  {
-    stk = g_list_insert_before (stk, last->next, first->data);
-    window = first->data;
-    stk = g_list_remove_link (stk, first);
-  }
+    GList *first = stk;
+    while (!META_WINDOW_IN_NORMAL_TAB_CHAIN ((MetaWindow *) first->data)) first = first->next;
+
+    GList *last = g_list_last (stk);
+    while (!META_WINDOW_IN_NORMAL_TAB_CHAIN ((MetaWindow *) last->data)) last = last->prev;
+
+    if (backward)
+    {
+      stk = g_list_insert_before (stk, first, last->data);
+      window = (last->prev)->data;
+      stk = g_list_remove_link (stk, last);
+    }
+    else
+    {
+      stk = g_list_insert_before (stk, last->next, first->data);
+      window = first->data;
+      stk = g_list_remove_link (stk, first);
+    }
+
+    if (type == META_TAB_LIST_NORMAL) break;
+  } while (meta_window_get_group (window) != display->focus_window->group);
 
   meta_stack_set_positions (display->stack, stk);
   meta_stack_thaw (display->stack);
@@ -4069,15 +4078,15 @@ init_builtin_key_bindings (MetaDisplay *display)
                           "cycle-panels",
                           common_keybindings,
                           META_KEY_BINDING_NONE,
-                          META_KEYBINDING_ACTION_CYCLE_PANELS,
-                          handle_cycle, META_TAB_LIST_DOCKS);
+                          META_KEYBINDING_ACTION_SWITCH_PANELS,
+                          handle_switch, META_TAB_LIST_DOCKS);
 
   add_builtin_keybinding (display,
                           "cycle-panels-backward",
                           common_keybindings,
                           META_KEY_BINDING_IS_REVERSED,
-                          META_KEYBINDING_ACTION_CYCLE_PANELS_BACKWARD,
-                          handle_cycle, META_TAB_LIST_DOCKS);
+                          META_KEYBINDING_ACTION_SWITCH_PANELS_BACKWARD,
+                          handle_switch, META_TAB_LIST_DOCKS);
 
   /***********************************/
 
