@@ -3278,7 +3278,7 @@ do_cycle_windows (MetaDisplay     *display,
     while (!META_WINDOW_IN_NORMAL_TAB_CHAIN ((MetaWindow *) first->data)) first = first->next;
 
     GList *last = g_list_last (stk);
-    while (!META_WINDOW_IN_NORMAL_TAB_CHAIN ((MetaWindow *) last->data)) last = last->prev;
+    while (!META_WINDOW_IN_NORMAL_TAB_CHAIN ((MetaWindow *) last->data) || ((MetaWindow *) last->data)->wm_state_above) last = last->prev;
 
     if (backward)
     {
