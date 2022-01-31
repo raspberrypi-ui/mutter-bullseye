@@ -436,7 +436,11 @@ reload_net_wm_user_time (MetaWindow    *window,
   if (value->type != META_PROP_VALUE_INVALID)
     {
       uint32_t cardinal = value->v.cardinal;
-      meta_window_set_user_time (window, cardinal);
+      // only update the time if the window actually has one set...
+      if (meta_window_get_user_time (window) && meta_window_get_user_time (window) < cardinal)
+      {
+        meta_window_set_user_time (window, cardinal);
+      }
     }
 }
 
