@@ -2216,6 +2216,9 @@ window_is_terminal (MetaWindow *window)
   /* Terminal -- XFCE Terminal */
   else if (strcmp (window->res_class, "Terminal") == 0)
     return TRUE;
+  /* LXTerminal -- LXDE Terminal */
+  else if (strcmp (window->res_class, "Lxterminal") == 0)
+    return TRUE;
 
   return FALSE;
 }
