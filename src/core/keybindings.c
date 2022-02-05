@@ -3285,15 +3285,15 @@ do_cycle_windows (MetaDisplay     *display,
 
     if (backward)
     {
-      stk = g_list_insert_before (stk, first, last->data);
-      window = (last->prev)->data;
-      stk = g_list_remove_link (stk, last);
-    }
-    else
-    {
       stk = g_list_insert_before (stk, last->next, first->data);
       window = first->data;
       stk = g_list_remove_link (stk, first);
+    }
+    else
+    {
+      stk = g_list_insert_before (stk, first, last->data);
+      window = (last->prev)->data;
+      stk = g_list_remove_link (stk, last);
     }
 
     if (type == META_TAB_LIST_NORMAL) break;
