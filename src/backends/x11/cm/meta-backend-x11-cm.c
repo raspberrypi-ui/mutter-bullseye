@@ -360,6 +360,7 @@ meta_backend_x11_cm_handle_host_xevent (MetaBackendX11 *backend_x11,
         bypass_clutter = TRUE;
     }
 
+#if 0
   if (event->type == meta_backend_x11_get_xkb_event_base (x11))
     {
       XkbEvent *xkb_ev = (XkbEvent *) event;
@@ -381,6 +382,7 @@ meta_backend_x11_cm_handle_host_xevent (MetaBackendX11 *backend_x11,
             }
         }
     }
+#endif
 
   bypass_clutter |=
     meta_monitor_manager_xrandr_handle_xevent (monitor_manager_xrandr, event);
@@ -456,4 +458,3 @@ meta_backend_x11_cm_class_init (MetaBackendX11CmClass *klass)
   backend_x11_class->translate_device_event = meta_backend_x11_cm_translate_device_event;
   backend_x11_class->translate_crossing_event = meta_backend_x11_cm_translate_crossing_event;
 }
-
