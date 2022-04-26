@@ -2217,6 +2217,11 @@ process_iso_next_group (MetaDisplay *display,
           if (keycode == keys->iso_next_group_combo[i].keycodes[j] &&
               mask == keys->iso_next_group_combo[i].mask)
             {
+              struct xkb_keymap *km = meta_backend_get_keymap (meta_get_backend ());
+              int grp = meta_backend_get_keymap_layout_group (meta_get_backend ());
+              if (grp++ >= xkb_keymap_num_layouts (km)) grp = 0;
+              meta_backend_lock_layout_group (meta_get_backend (), grp);
+              //meta_backend_set_keymap (meta_get_backend (), "it","","");
               /* If the signal handler returns TRUE the keyboard will
                  remain frozen. It's the signal handler's responsibility
                  to unfreeze it. */
