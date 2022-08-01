@@ -3762,6 +3762,8 @@ static void handle_launch_terminal (MetaDisplay *display, MetaWindow *window, Cl
 
 static void handle_lxpanel_menu (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
+    // need to ungrab the keyboard here to allow the menu to open...
+    ungrab_keyboard (GDK_CURRENT_TIME);
     spawn ("lxpanelctl", "menu");
 }
 
