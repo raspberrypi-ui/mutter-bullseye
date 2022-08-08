@@ -3767,6 +3767,20 @@ static void handle_lxpanel_menu (MetaDisplay *display, MetaWindow *window, Clutt
     spawn ("lxpanelctl", "menu");
 }
 
+static void handle_lxpanel_bluetooth_menu (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
+{
+    // need to ungrab the keyboard here to allow the menu to open...
+    ungrab_keyboard (GDK_CURRENT_TIME);
+    spawn ("lxpanelctl", "command", "bluetooth", "menu");
+}
+
+static void handle_lxpanel_network_menu (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
+{
+    // need to ungrab the keyboard here to allow the menu to open...
+    ungrab_keyboard (GDK_CURRENT_TIME);
+    spawn ("lxpanelctl", "command", "netman", "menu");
+}
+
 static void handle_lxpanel_run (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
     spawn ("lxpanelctl", "run");
@@ -4247,6 +4261,20 @@ init_builtin_key_bindings (MetaDisplay *display)
                           META_KEY_BINDING_NON_MASKABLE,
                           META_KEYBINDING_ACTION_NONE,
                           handle_lxpanel_menu, 0);
+
+  add_builtin_keybinding (display,
+                          "lxpanel-bluetooth-menu",
+                          mutter_keybindings,
+                          META_KEY_BINDING_NON_MASKABLE,
+                          META_KEYBINDING_ACTION_NONE,
+                          handle_lxpanel_bluetooth_menu, 0);
+
+  add_builtin_keybinding (display,
+                          "lxpanel-network-menu",
+                          mutter_keybindings,
+                          META_KEY_BINDING_NON_MASKABLE,
+                          META_KEYBINDING_ACTION_NONE,
+                          handle_lxpanel_network_menu, 0);
 
   add_builtin_keybinding (display,
                           "lxpanel-run",

@@ -200,6 +200,16 @@
       <summary>Open LXPanel menu</summary>
     </key>
 
+    <key name="lxpanel-bluetooth-menu" type="as">
+      <default><![CDATA[['<Ctrl><Alt>b']]]></default>
+      <summary>Open LXPanel Bluetooth plugin menu</summary>
+    </key>
+
+    <key name="lxpanel-network-menu" type="as">
+      <default><![CDATA[['<Ctrl><Alt>w']]]></default>
+      <summary>Open LXPanel network plugin menu</summary>
+    </key>
+
     <key name="lxpanel-run" type="as">
       <default><![CDATA[['<Alt>F2']]]></default>
       <summary>Open LXPanel run dialog</summary>
