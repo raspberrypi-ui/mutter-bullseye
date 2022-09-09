@@ -3757,73 +3757,73 @@ static void spawn (const char *arg1, ...)
 
 static void handle_launch_terminal (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    spawn ("x-terminal-emulator");
+    spawn ("x-terminal-emulator", NULL);
 }
 
 static void handle_lxpanel_menu (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
     // need to ungrab the keyboard here to allow the menu to open...
     ungrab_keyboard (GDK_CURRENT_TIME);
-    spawn ("lxpanelctl", "menu");
+    spawn ("lxpanelctl", "menu", NULL);
 }
 
 static void handle_lxpanel_bluetooth_menu (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
     // need to ungrab the keyboard here to allow the menu to open...
     ungrab_keyboard (GDK_CURRENT_TIME);
-    spawn ("lxpanelctl", "command", "bluetooth", "menu");
+    spawn ("lxpanelctl", "command", "bluetooth", "menu", NULL);
 }
 
 static void handle_lxpanel_network_menu (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
     // need to ungrab the keyboard here to allow the menu to open...
     ungrab_keyboard (GDK_CURRENT_TIME);
-    spawn ("lxpanelctl", "command", "netman", "menu");
+    spawn ("lxpanelctl", "command", "netman", "menu", NULL);
 }
 
 static void handle_lxpanel_run (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    spawn ("lxpanelctl", "run");
+    spawn ("lxpanelctl", "run", NULL);
 }
 
 static void handle_lxpanel_move (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    spawn ("lxpanelctl", "move");
+    spawn ("lxpanelctl", "move", NULL);
 }
 
 static void handle_shutdown (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    spawn ("lxde-pi-shutdown-helper");
+    spawn ("lxde-pi-shutdown-helper", NULL);
 }
 
 static void handle_volume_up (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    spawn ("lxpanelctl", "command", "volumepulse", "volu");
+    spawn ("lxpanelctl", "command", "volumepulse", "volu", NULL);
 }
 
 static void handle_volume_down (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    spawn ("lxpanelctl", "command", "volumepulse", "vold");
+    spawn ("lxpanelctl", "command", "volumepulse", "vold", NULL);
 }
 
 static void handle_volume_mute (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    spawn ("lxpanelctl", "command", "volumepulse", "mute");
+    spawn ("lxpanelctl", "command", "volumepulse", "mute", NULL);
 }
 
 static void handle_launch_taskman (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    spawn ("lxtask");
+    spawn ("lxtask", NULL);
 }
 
 static void handle_screenshot (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    spawn ("scrot");
+    spawn ("scrot", NULL);
 }
 
 static void handle_toggle_magnifier (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
 {
-    spawn ("lxpanelctl", "command", "magnifier", "toggle");
+    spawn ("lxpanelctl", "command", "magnifier", "toggle", NULL);
 }
 
 static void handle_install_reader (MetaDisplay *display, MetaWindow *window, ClutterKeyEvent *event, MetaKeyBinding *binding, gpointer dummy)
@@ -3832,7 +3832,7 @@ static void handle_install_reader (MetaDisplay *display, MetaWindow *window, Clu
 
     gchar **environ = g_environ_setenv (g_get_environ (), "SUDO_ASKPASS", "/usr/lib/gui-pkinst/pwdgpi.sh", TRUE);
     environ = g_environ_setenv (environ, "GDK_BACKEND", "x11", TRUE);
-    g_spawn_async (NULL, cmd, environ, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL);
+    g_spawn_async (NULL, (char **) cmd, environ, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL);
     g_strfreev (environ);
 }
 
