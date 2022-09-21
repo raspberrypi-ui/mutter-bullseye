@@ -3264,7 +3264,7 @@ do_cycle_windows (MetaDisplay     *display,
 {
   MetaWorkspaceManager *workspace_manager = display->workspace_manager;
   MetaTabList type = binding->handler->data;
-  MetaWindow *window;
+  MetaWindow *start = NULL, *window = NULL;
 
   // if trying to switch group...
   if (type != META_TAB_LIST_NORMAL)
@@ -3282,32 +3282,19 @@ do_cycle_windows (MetaDisplay     *display,
   // the loop body shuffles one window either up or down in the stack
   // for normal operation, break after one iteration to just move by one window
   // for group operation, repeat the shuffle to find another window in the same group
-  MetaWindow *start = NULL;
   do
   {
     GList *first = stk;
     while (first && !META_WINDOW_IN_NORMAL_TAB_CHAIN ((MetaWindow *) first->data)) first = first->next;
-    if (!first)
-    {
-      meta_stack_thaw (display->stack);
-      return;
-    }
+    if (!first) break;
 
     // check for looping back to the start of the stack
     if (!start) start = first->data;
-    else if (start == first->data)
-    {
-      meta_stack_thaw (display->stack);
-      return;
-    }
+    else if (start == first->data) break;
 
     GList *last = g_list_last (stk);
     while (last && (!META_WINDOW_IN_NORMAL_TAB_CHAIN ((MetaWindow *) last->data) || ((MetaWindow *) last->data)->wm_state_above)) last = last->prev;
-    if (!last)
-    {
-      meta_stack_thaw (display->stack);
-      return;
-    }
+    if (!last) break;
 
     if (backward)
     {
@@ -3325,10 +3312,10 @@ do_cycle_windows (MetaDisplay     *display,
     if (type == META_TAB_LIST_NORMAL) break;
   } while (meta_window_get_group (window) != display->focus_window->group);
 
-  meta_stack_set_positions (display->stack, stk);
+  if (window) meta_stack_set_positions (display->stack, stk);
   meta_stack_thaw (display->stack);
 
-  meta_window_focus (window, event->time);
+  if (window) meta_window_focus (window, event->time);
 }
 
 static void
