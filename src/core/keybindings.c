@@ -3266,8 +3266,15 @@ do_cycle_windows (MetaDisplay     *display,
   MetaTabList type = binding->handler->data;
   MetaWindow *window;
 
-  // if a keep-above window has focus, trying to switch group will infinite-loop, so don't try...
-  if (display->focus_window->wm_state_above && type != META_TAB_LIST_NORMAL) return;
+  // if trying to switch group...
+  if (type != META_TAB_LIST_NORMAL)
+  {
+      // ...having no window focussed means there is no group to switch between...
+      if (!display->focus_window) return;
+
+      //.. and if the focussed window is keep-above, switching group will infinite-loop
+      if (display->focus_window->wm_state_above) return;
+  }
 
   GList *stk = meta_stack_list_windows (display->stack, workspace_manager->active_workspace);
   meta_stack_freeze (display->stack);
@@ -3275,13 +3282,32 @@ do_cycle_windows (MetaDisplay     *display,
   // the loop body shuffles one window either up or down in the stack
   // for normal operation, break after one iteration to just move by one window
   // for group operation, repeat the shuffle to find another window in the same group
+  MetaWindow *start = NULL;
   do
   {
     GList *first = stk;
-    while (!META_WINDOW_IN_NORMAL_TAB_CHAIN ((MetaWindow *) first->data)) first = first->next;
+    while (first && !META_WINDOW_IN_NORMAL_TAB_CHAIN ((MetaWindow *) first->data)) first = first->next;
+    if (!first)
+    {
+      meta_stack_thaw (display->stack);
+      return;
+    }
+
+    // check for looping back to the start of the stack
+    if (!start) start = first->data;
+    else if (start == first->data)
+    {
+      meta_stack_thaw (display->stack);
+      return;
+    }
 
     GList *last = g_list_last (stk);
-    while (!META_WINDOW_IN_NORMAL_TAB_CHAIN ((MetaWindow *) last->data) || ((MetaWindow *) last->data)->wm_state_above) last = last->prev;
+    while (last && (!META_WINDOW_IN_NORMAL_TAB_CHAIN ((MetaWindow *) last->data) || ((MetaWindow *) last->data)->wm_state_above)) last = last->prev;
+    if (!last)
+    {
+      meta_stack_thaw (display->stack);
+      return;
+    }
 
     if (backward)
     {
