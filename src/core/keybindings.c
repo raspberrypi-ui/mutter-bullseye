@@ -3293,7 +3293,11 @@ do_cycle_windows (MetaDisplay     *display,
     else if (start == first->data) break;
 
     GList *last = g_list_last (stk);
-    while (last && (!META_WINDOW_IN_NORMAL_TAB_CHAIN ((MetaWindow *) last->data) || ((MetaWindow *) last->data)->wm_state_above)) last = last->prev;
+    while (last &&
+      (!META_WINDOW_IN_NORMAL_TAB_CHAIN ((MetaWindow *) last->data) ||
+      ((MetaWindow *) last->data)->wm_state_above ||
+      ((MetaWindow *) last->data)->type == META_WINDOW_MODAL_DIALOG))
+        last = last->prev;
     if (!last) break;
 
     if (backward)
